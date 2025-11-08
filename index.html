@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Admin • Raja Kudapan 🍜</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="admin.css">
+
+  <!-- Toastify -->
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+</head>
+<body>
+  <header class="admin-header">
+    <div class="brand">
+      <div class="logo">🍜</div>
+      <div>
+        <div class="title">Admin Panel</div>
+        <div class="subtitle" id="previewStoreName">Raja Kudapan 🍜</div>
+      </div>
+    </div>
+  </header>
+
+  <main class="admin-main">
+    <!-- TAB: MENU -->
+    <section id="tab-menu" class="tab active">
+      <div class="section-header">
+        <h2>Daftar Menu</h2>
+      </div>
+
+      <div class="table-wrap card">
+        <table class="menu-table">
+          <thead>
+            <tr>
+              <th>Gambar</th>
+              <th>Nama</th>
+              <th>Kategori</th>
+              <th>Harga</th>
+              <th>Stok</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="menuTableBody">
+            <!-- rows injected by JS -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- floating add button -->
+      <button id="fabAddMenu" class="fab" title="Tambah Menu">＋</button>
+    </section>
+
+    
+<!-- TAB: MERCHANT -->
+<section id="tab-merchant" class="tab">
+  <h2>Pengaturan Merchant</h2>
+  <div class="card form-card">
+    <label>Nomor WhatsApp (contoh: 62821...)</label>
+    <input id="merchantPhone" placeholder="62821..." />
+
+    <label>Nama Pemilik / Merchant</label>
+    <input id="bankOwner" placeholder="a.n Raja Kudapan" />
+
+    <label>Alamat Toko</label>
+    <textarea id="merchantAddress" rows="2" placeholder="Jl. Melati No.10, Denpasar"></textarea>
+
+    <button id="btnGetLocation" class="btn-ghost" style="margin-top:6px;">📍 Ambil Lokasi Saya</button>
+
+    <div class="coord-box" style="display:flex;gap:8px;margin-top:6px;">
+      <div style="flex:1;">
+        <label>Latitude</label>
+        <input id="merchantLat" type="number" step="0.000001" placeholder="-6.200000">
+      </div>
+      <div style="flex:1;">
+        <label>Longitude</label>
+        <input id="merchantLng" type="number" step="0.000001" placeholder="106.816666">
+      </div>
+    </div>
+
+    <label>Jarak Maksimal Pemesanan (1–5 km)</label>
+    <input id="maxDistance" type="range" min="1" max="5" step="0.5" value="3"
+           oninput="this.nextElementSibling.textContent=this.value+' km'">
+    <span style="font-size:0.9rem;color:#666">3 km</span>
+
+    <label>Nama Bank</label>
+    <input id="bankName" placeholder="BCA / Mandiri / BNI" />
+
+    <label>Nomor Rekening</label>
+    <input id="bankAccount" placeholder="1234567890" />
+
+    <label>Nama E-Wallet</label>
+    <input id="ewalletName" placeholder="DANA / OVO / GoPay" />
+
+    <label>Nomor E-Wallet</label>
+    <input id="ewalletNumber" placeholder="0812xxxxxxx" />
+
+    <label>URL QRIS</label>
+    <input id="qrisUrl" placeholder="https://..." />
+
+    <div style="margin-top:12px;display:flex;gap:8px;">
+      <button id="saveMerchant" class="btn">Simpan Merchant</button>
+      <button id="copyWa" class="btn-ghost">Salin Nomor WA</button>
+    </div>
+  </div>
+</section>
+    <!-- TAB: DEKORASI -->
+    <section id="tab-dekorasi" class="tab">
+      <h2>Dekorasi Toko</h2>
+      <div class="card form-card">
+        <label>Nama Toko</label>
+        <input id="decorName" placeholder="Raja Kudapan 🍜">
+        <label></label>
+        <input id="decorAccent" type="color" value="#ff7b00">
+        
+        
+
+        <label>Warna Background</label>
+        <input id="decorBg" type="color" value="#fff8f0">
+
+        <label>Font</label>
+        <select id="decorFont">
+          <option value="Poppins">Poppins</option>
+          <option value="Nunito">Nunito</option>
+          <option value="Inter">Inter</option>
+        </select>
+
+        <div style="margin-top:12px;">
+          <button id="saveDecor" class="btn">Simpan Dekorasi</button>
+        </div>
+      </div>
+
+      <div class="card preview-card">
+        <h4>Preview</h4>
+        <div id="previewBox" class="preview">
+          <div class="preview-header" id="previewHeader">Raja Kudapan 🍜</div>
+          <div class="preview-body">Contoh tampilan toko — warna dan font akan berubah sesuai pilihan</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- bottom navbar -->
+  <nav class="bottom-nav">
+    <button class="nav-btn active" data-target="tab-menu">🍱 Menu</button>
+    <button class="nav-btn" data-target="tab-merchant">🏪 Merchant</button>
+    <button class="nav-btn" data-target="tab-dekorasi">🎨 Dekorasi</button>
+  </nav>
+
+  <!-- Modal (satu modal dinamis untuk Tambah/Edit Menu) -->
+  <div id="modalWrap" class="modal-wrap">
+    <div class="modal card">
+      <h3 id="modalTitle">Tambah Menu</h3>
+
+      <label>Nama Menu</label>
+      <input id="menu_name" placeholder="Kentang Goreng Raja">
+
+      <label>Kategori</label>
+      <select id="menu_category">
+        <option value="Makanan">Makanan</option>
+        <option value="Minuman">Minuman</option>
+        <option value="Snack">Snack</option>
+      </select>
+
+      <label>Harga (angka)</label>
+      <input id="menu_price" type="number" placeholder="10000">
+
+      <label>Stok (angka)</label>
+      <input id="menu_stock" type="number" placeholder="10">
+
+      <label>URL Gambar</label>
+      <input id="menu_image" placeholder="https://...jpg">
+
+      <div class="modal-actions">
+        <button id="modalCancel" class="btn-ghost">Batal</button>
+        <button id="modalSave" class="btn">Simpan</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="admin.js"></script>
+</body>
+</html>
